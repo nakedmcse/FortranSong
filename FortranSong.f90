@@ -56,8 +56,6 @@ contains
             // '-d ''{"model": "gpt-3.5-turbo", "messages":[{"role": "user", "content": "' &
             // trim(query) // '"}], "temperature":0.7}'' > tmpout.json'
 
-        print *,"Curl call: ",trim(curlcmd)
-
         call execute_command_line(trim(curlcmd),exitstat=err)
     end subroutine GetAPICompletion
 
@@ -74,7 +72,6 @@ contains
         !Test JSON extraction
         call json%initialize()
         call json%load(filename='tmpout.json')
-        !call json%print()
 
         !Get the message
         call json%get('created',created,found)
