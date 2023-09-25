@@ -32,7 +32,6 @@ module openai_api
             // '-d ''{"model": "gpt-4", "messages":[{"role": "user", "content": "' &
             // trim(query) // '"}], "temperature":0.7}'' > tmpout.json'
 
-        print *,"Curl: ",trim(curlcmd)
         call execute_command_line(trim(curlcmd),exitstat=err)
     end subroutine GetAPICompletion
 

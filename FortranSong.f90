@@ -28,6 +28,6 @@ program Song
 
     !Generate Calendar Output with response
 
-    print *,"Content: ",message
-    print *,"API Key: ",trim(apiKey)
+    print *,"Content:"
+    print *,message
 end program Song
