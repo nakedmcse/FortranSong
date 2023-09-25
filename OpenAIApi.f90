@@ -23,15 +23,16 @@ module openai_api
         integer, parameter :: iunit = 10
         character(len=80),intent(in) :: apikey
         character(len=2048),intent(in) :: query
-        character(len=2048) :: curlcmd
+        character(len=4096) :: curlcmd
         character(len=1024) :: line
 
         curlcmd = 'curl -s https://api.openai.com/v1/chat/completions ' &
             // '-H "Content-Type: application/json" ' &
             // '-H "Authorization: Bearer ' // trim(apikey) // '" ' &
-            // '-d ''{"model": "gpt-3.5-turbo", "messages":[{"role": "user", "content": "' &
+            // '-d ''{"model": "gpt-4", "messages":[{"role": "user", "content": "' &
             // trim(query) // '"}], "temperature":0.7}'' > tmpout.json'
 
+        print *,"Curl: ",trim(curlcmd)
         call execute_command_line(trim(curlcmd),exitstat=err)
     end subroutine GetAPICompletion
 
