@@ -32,9 +32,7 @@ program Song
     call ExtractJSON(message)
 
     !Generate Calendar Output with response
-
-    print *,"Content:"
-    print *,message
+    call BuildCal(message,monthYear)
 
     contains
 
@@ -70,6 +68,35 @@ program Song
         ! Get the name of the adjusted month
         adjustedMonthName = monthNames(adjustedMonth)
 
-        write(month_and_year,'(A, I0)') trim(adjustedMonthName),adjustedYear
+        write(month_and_year,'(A, I0)') trim(adjustedMonthName) // ' ',adjustedYear
     end subroutine GetMonthYear
+
+    !Build calendar
+    subroutine BuildCal(calentries,caldate)
+        implicit none
+        character(kind=json_ck,len=:),allocatable,intent(in) :: calentries
+        character(len=14),intent(in) :: caldate
+        character(len=512) :: linebuffer,cmd
+        integer :: err,unit,ios
+
+        !Write output to songs.cal
+        unit = 1
+        open(newunit=unit,file='songs.cal',status='replace',action='write')
+        write(unit,*) trim(calentries)
+        close(unit)
+
+        !Execute remind to build calendar output (songs.txt)
+        cmd = 'remind -cu -w140,, songs.cal ' // trim(caldate) // ' > songs.txt'
+        call execute_command_line(trim(cmd),exitstat=err)
+
+        !Read and display songs.txt
+        unit = 2
+        open(newunit=unit,file='songs.txt',status='old',action='read')
+        do
+            read(unit,'(A)',iostat=ios) linebuffer
+            if(ios /= 0) exit
+            print *,trim(linebuffer)
+        end do
+        close(unit)
+    end subroutine BuildCal
 end program Song
